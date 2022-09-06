@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -9,11 +11,15 @@ import java.security.NoSuchAlgorithmException;
 
 public class Blob {
 	private byte[] byteArray;
+	private String SHA1;
 	
 	public Blob(String path) throws IOException
 	{
 		Path p1 = Paths.get(path);
 		byteArray = Files.readAllBytes(p1);
+		System.out.println(byteArray);
+		SHA1 = toSHA1(byteArray);
+		newFile();
 	}
 	
 	public static String toSHA1(byte[] convertme) {
@@ -27,11 +33,17 @@ public class Blob {
 	    return new String(md.digest(convertme));
 	}
 	
-	public void newFile()
+	public void newFile() throws FileNotFoundException
 	{
-//		PrintWriter out = new PrintWriter(outputFileName);
-//		.\\test\\objects\\SHA1
+		System.out.println ("./Blob/" + SHA1);
+		File SHA1File = new File("./Blob/" + SHA1);
+		String destination = ("./objects/" + SHA1);
+		PrintWriter out = new PrintWriter("SHA1File");
+		String str1 = new String(byteArray);
+		out.print(str1);
+		out.close();
 	}
+	
 	
 	
 	
