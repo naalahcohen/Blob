@@ -14,7 +14,8 @@ import java.util.Arrays;
 
 public class Blob {
 	private byte[] SHA1;
-	private String SHA1Str;
+	private String SHA1Str = "";
+	String str = "";
 	
 	public Blob(String path) throws IOException, NoSuchAlgorithmException
 	{
@@ -22,7 +23,6 @@ public class Blob {
 		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 
 		String strLine;
-		String str = "";
 
 		//Read File Line By Line
 		while ((strLine = br.readLine()) != null)   {
@@ -65,7 +65,7 @@ public class Blob {
 		File SHA1File = new File("objects/" + SHA1Str);
 		//String destination = ("./objects/" + SHA1);
 		PrintWriter out = new PrintWriter(SHA1File);
-		out.print(SHA1Str);
+		out.print(str);
 		out.close();
 	}
 	
