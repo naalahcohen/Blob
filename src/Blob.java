@@ -34,7 +34,7 @@ public class Blob {
 		//Close the input stream
 		fstream.close();
 		SHA1(str);
-//		newFile();
+		newFile();
 	}
 	
 	public void SHA1(String x) throws NoSuchAlgorithmException
@@ -43,9 +43,8 @@ public class Blob {
 	    MessageDigest sha1 = MessageDigest.getInstance("SHA1");
 	    SHA1 = sha1.digest((x).getBytes()); 
 	    for(byte b : SHA1 ) {
-	    	  System.out.printf("%02x",b);
+	    	  SHA1Str += String.format("%02x",b);
 	    	}
-	    	System.out.println();
 
 	}
 	
@@ -60,16 +59,15 @@ public class Blob {
 //	    return new String(md.digest(convertme));
 
 	
-//	public void newFile() throws FileNotFoundException
-//	{
-////		System.out.println ("./Blob/" + SHA1);
-//		File SHA1File = new File("./objects/" + SHA1);
-//		//String destination = ("./objects/" + SHA1);
-//		PrintWriter out = new PrintWriter("SHA1File");
-//		String str1 = new String(byteArray);
-//		out.print(str1);
-//		out.close();
-//	}
+	public void newFile() throws FileNotFoundException
+	{
+//		System.out.println ("./Blob/" + SHA1);
+		File SHA1File = new File("objects/" + SHA1Str);
+		//String destination = ("./objects/" + SHA1);
+		PrintWriter out = new PrintWriter(SHA1File);
+		out.print(SHA1Str);
+		out.close();
+	}
 	
 	
 	
