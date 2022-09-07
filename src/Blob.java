@@ -1,6 +1,9 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,11 +18,23 @@ public class Blob {
 	
 	public Blob(String path) throws IOException
 	{
-		Path p1 = Paths.get(path);
-		byteArray = Files.readAllBytes(p1);
-		System.out.println(byteArray);
-		SHA1 = toSHA1(byteArray);
-		newFile();
+		FileInputStream fstream = new FileInputStream("blobTestFile.txt");
+		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+
+		String strLine;
+		String str = "";
+
+		//Read File Line By Line
+		while ((strLine = br.readLine()) != null)   {
+		  // Print the content on the console - do what you want to do
+		  str += strLine;
+		}
+		System.out.println(str);
+
+		//Close the input stream
+		fstream.close();
+//		SHA1 = toSHA1(byteArray);
+//		newFile();
 	}
 	
 	public static String toSHA1(byte[] convertme) {
@@ -36,8 +51,8 @@ public class Blob {
 	public void newFile() throws FileNotFoundException
 	{
 		System.out.println ("./Blob/" + SHA1);
-		File SHA1File = new File("./Blob/" + SHA1);
-		String destination = ("./objects/" + SHA1);
+		File SHA1File = new File("./objects/" + SHA1);
+		//String destination = ("./objects/" + SHA1);
 		PrintWriter out = new PrintWriter("SHA1File");
 		String str1 = new String(byteArray);
 		out.print(str1);
