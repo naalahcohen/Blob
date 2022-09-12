@@ -46,10 +46,6 @@ public class Index {
 		    out.print(key + " : " + value);
 		}
 		out.close();
-		
-		
-		
-		// remove from index file
 	}
 
 	}
