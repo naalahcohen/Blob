@@ -4,6 +4,7 @@ import java.security.NoSuchAlgorithmException;
 public class BlobTester {
 	public static void main (String[] args) throws IOException, NoSuchAlgorithmException 
 	{
-		Blob blob1 = new Blob("Blob/blobTestFile");	
+		Blob blob1 = new Blob("blobTestFile.txt");	
+		System.out.println(blob1.getSHA1());
 	}
 }

@@ -17,9 +17,9 @@ public class Blob {
 	private String SHA1Str = "";
 	String str = "";
 	
-	public Blob(String path) throws IOException, NoSuchAlgorithmException
+	public Blob(String fileName) throws IOException, NoSuchAlgorithmException
 	{
-		FileInputStream fstream = new FileInputStream("blobTestFile.txt");
+		FileInputStream fstream = new FileInputStream(fileName);
 		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 
 		String strLine;
@@ -46,6 +46,11 @@ public class Blob {
 	    	  SHA1Str += String.format("%02x",b);
 	    	}
 
+	}
+	
+	public String getSHA1()
+	{
+		return SHA1Str;
 	}
 	
 //	public static String toSHA1(byte[] convertme) {
