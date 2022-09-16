@@ -18,7 +18,7 @@ public class TreeObject {
 		File sha1File = new File("./objects/"+fileSha1Name);
         sha1File.createNewFile();
         
-        FileWriter myWriter = new FileWriter(sha1File.getName());
+        FileWriter myWriter = new FileWriter("./objects/"+fileSha1Name);
         arrList.forEach((word) -> {
 			try {
 				myWriter.write(word);
