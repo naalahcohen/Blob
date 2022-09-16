@@ -1,6 +1,10 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -25,10 +29,7 @@ public class Index {
 		Blob b = new Blob(fileName);
 		SHA1 = b.getSHA1();
 		objects.put(fileName, SHA1);
-		PrintWriter out = new PrintWriter("index");
-		out.print(fileName + " : " + SHA1);
-		out.close();
-		// add objects to index using print writer
+		update();
 	}
 	
 	public void remove(String fileName) throws FileNotFoundException
@@ -39,13 +40,34 @@ public class Index {
 		{
 			objects.remove(fileName);
 		}
-		PrintWriter out = new PrintWriter("index");
+		update();
+	}
+	
+	public String getFileString(String fileName) throws IOException
+	{
+	FileInputStream fstream = new FileInputStream("index");
+	BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+
+	String strLine = "";
+	String str = "";
+
+	//Read File Line By Line
+	while ((strLine = br.readLine()) != null)   {
+	  // Print the content on the console - do what you want to do
+	  str += strLine;
+	}
+		return str;
+	}
+	
+	public void update() throws FileNotFoundException
+	{
+		PrintWriter f = new PrintWriter("index");
 		for (String name: objects.keySet()) {
 		    String key = name.toString();
 		    String value = objects.get(name).toString();
-		    out.print(key + " : " + value);
+		    f.println(key + " : " + value);
 		}
-		out.close();
+		f.close();
 	}
 
 	}

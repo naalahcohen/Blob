@@ -7,6 +7,7 @@ public class IndexTester {
 			Index i = new Index();
 			i.init();
 			i.add("indexTestFile.txt.rtf");
+			i.add("blobTestFile.txt");
 			i.remove("indexTestFile.txt.rtf");
 		}
 	}
