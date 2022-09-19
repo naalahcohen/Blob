@@ -3,6 +3,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,7 +11,9 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Formatter;
 
 public class Commit {
 	private String parent;
@@ -23,13 +26,17 @@ public class Commit {
 	private byte[] SHA1;
 	
 	
-	public Commit(String fileName, String summary1, String author1, String parent1) throws IOException
+	public Commit(String fileName, String summary1, String author1, String parent1) throws IOException, NoSuchAlgorithmException
 	{
 		pTree = fileName;
 		summary = summary1;
 		author = author1;
 		parent = parent1;
 		next = "";
+		if (!parent.equals(""))
+		{
+			updateParent("objects/" + parent);
+		}
 	}
 	
 	public String getContents()
@@ -44,17 +51,49 @@ public class Commit {
 		return contents;
 	}
 	
-	public String generateSHA1(String str) throws IOException, NoSuchAlgorithmException
+	private static String generateSHA1(String password)
 	{
-		String SHA1Str = "";
-		 MessageDigest sha1 = MessageDigest.getInstance("SHA1");
-		    SHA1 = sha1.digest((str).getBytes()); 
-		    for(byte b : SHA1 ) {
-		    	  SHA1Str += String.format("%02x",b);
-		    	}
-		    return SHA1Str;
+	    String sha1 = "";
+	    try
+	    {
+	        MessageDigest crypt = MessageDigest.getInstance("SHA-1");
+	        crypt.reset();
+	        crypt.update(password.getBytes("UTF-8"));
+	        sha1 = byteToHex(crypt.digest());
+	    }
+	    catch(NoSuchAlgorithmException e)
+	    {
+	        e.printStackTrace();
+	    }
+	    catch(UnsupportedEncodingException e)
+	    {
+	        e.printStackTrace();
+	    }
+	    return sha1;
 	}
-	
+
+	private static String byteToHex(final byte[] hash)
+	{
+	    Formatter formatter = new Formatter();
+	    for (byte b : hash)
+	    {
+	        formatter.format("%02x", b);
+	    }
+	    String result = formatter.toString();
+	    formatter.close();
+	    return result;
+	}
+//	public String generateSHA1(String str) throws IOException, NoSuchAlgorithmException
+//	{
+//		String SHA1Str = "";
+//		 MessageDigest sha1 = MessageDigest.getInstance("SHA1");
+//		    SHA1 = sha1.digest((str).getBytes()); 
+//		    for(byte b : SHA1 ) {
+//		    	  SHA1Str += String.format("%02x",b);
+//		    	}
+//		    return SHA1Str;
+//	}
+//	
 	public String getDate()
 	{
 		String timeStamp = new SimpleDateFormat("MM/dd/yy").format(Calendar.getInstance().getTime());
@@ -73,6 +112,28 @@ public class Commit {
 	        }
 	}
 	
+	public void updateParent(String parent) throws NoSuchAlgorithmException, IOException
+	{
+		setVariable(3,generateSHA1(getContents()),parent);
+	}
 	
-
-}
+		public static void setVariable(int lineNumber, String data, String fileName) throws IOException {
+			    Path path = Paths.get(fileName);
+			    ArrayList<String> lines = (ArrayList<String>) Files.readAllLines(path, StandardCharsets.UTF_8);
+			    lines.set(lineNumber - 1, data);
+			    Files.write(path, lines, StandardCharsets.UTF_8);
+			}
+		}
+//			FileInputStream fstream = new FileInputStream(parent);
+//			BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+//
+//			String pContents = "";
+//			pContents += br.readLine();
+//			pContents += br.readLine();
+//			br.readLine();
+//			pContents += generateSHA1(getContents());
+//			pContents += br.readLine();
+//			pContents += br.readLine();
+//			pContents += br.readLine();
+//			System.out.println(pContents);
+//			}
