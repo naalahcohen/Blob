@@ -64,10 +64,11 @@ public class Blob {
 //	    return new String(md.digest(convertme));
 
 	
-	public void newFile() throws FileNotFoundException
+	public void newFile() throws IOException
 	{
 //		System.out.println ("./Blob/" + SHA1);
 		File SHA1File = new File("objects/" + SHA1Str);
+		SHA1File.createNewFile();
 		//String destination = ("./objects/" + SHA1);
 		PrintWriter out = new PrintWriter(SHA1File);
 		out.print(str);
