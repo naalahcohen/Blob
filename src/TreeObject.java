@@ -9,7 +9,6 @@ import java.util.Formatter;
 
 public class TreeObject {
 	
-	
 	public TreeObject(ArrayList<String> arrList) throws IOException {
 		StringBuilder sb= new StringBuilder();
 		arrList.forEach((word) -> sb.append(word));
