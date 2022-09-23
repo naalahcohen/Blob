@@ -1,5 +1,8 @@
+package tester;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+
+import git.Blob;
 
 public class BlobTester {
 	public static void main (String[] args) throws IOException, NoSuchAlgorithmException 

@@ -1,5 +1,8 @@
+package tester;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+
+import git.Index;
 
 public class IndexTester {
 		public static void main(String[] args) throws NoSuchAlgorithmException, IOException

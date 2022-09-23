@@ -1,3 +1,4 @@
+package tester;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
@@ -7,6 +8,9 @@ import java.security.NoSuchAlgorithmException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import git.Index;
+import git.TesterMethods;
 
 class JUnitIndexTester {
 

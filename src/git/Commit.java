@@ -1,3 +1,4 @@
+package git;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -123,7 +124,12 @@ public class Commit {
 			    lines.set(lineNumber - 1, data);
 			    Files.write(path, lines, StandardCharsets.UTF_8);
 			}
-		}
+		
+	public void convertIndex() {
+		
+		
+	}
+	}
 //			FileInputStream fstream = new FileInputStream(parent);
 //			BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 //

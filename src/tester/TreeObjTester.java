@@ -1,6 +1,9 @@
+package tester;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+
+import git.TreeObject;
 
 public class TreeObjTester {
 	public static void main(String[] args) throws IOException, NoSuchAlgorithmException {

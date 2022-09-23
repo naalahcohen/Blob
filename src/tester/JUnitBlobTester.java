@@ -1,3 +1,4 @@
+package tester;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -8,6 +9,9 @@ import java.security.NoSuchAlgorithmException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import git.Blob;
+import git.TesterMethods;
 
 class JUnitBlobTester {
 
