@@ -38,6 +38,7 @@ public class Commit {
 		{
 			updateParent("objects/" + parent);
 		}
+		
 	}
 	
 	public String getContents()
@@ -101,7 +102,7 @@ public class Commit {
 		return timeStamp;
 	}
 	
-	public void makeFile() throws NoSuchAlgorithmException, IOException
+	public String makeFile() throws NoSuchAlgorithmException, IOException
 	{
 		String fileName = generateSHA1(getContents());
 		 Path p = Paths.get("objects/"+ fileName);
@@ -111,6 +112,7 @@ public class Commit {
 	            // TODO Auto-generated catch block
 	            e.printStackTrace();
 	        }
+	        return fileName;
 	}
 	
 	public void updateParent(String parent) throws NoSuchAlgorithmException, IOException

@@ -1,6 +1,9 @@
 package git;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,8 +16,9 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class TreeObject {
+	String firstLine;
 	
-	public TreeObject(ArrayList<String> arrList) throws IOException {
+	public TreeObject(ArrayList<String> arrList, Commit parent) throws IOException, NoSuchAlgorithmException {
 		StringBuilder sb= new StringBuilder();
 		arrList.forEach((word) -> sb.append(word));
 		String fileSha1Name= getSha1Name(sb.toString());
@@ -32,7 +36,9 @@ public class TreeObject {
 			}
 		});
         myWriter.close();
-		
+        BufferedReader br = new BufferedReader(new FileReader(parent.makeFile()));
+        firstLine = br.readLine();
+
 	}
 	
 	private static String getSha1Name(String password)
@@ -70,15 +76,15 @@ public class TreeObject {
 	
 	public static File creatingTree () throws FileNotFoundException {
 		ArrayList <String> listie = convertIndex(); 
+		PrintWriter pw = new PrintWriter(new FileOutputStream(gettingHash())); 
 		for(String str: listie) {
-			 PrintWriter pw = new PrintWriter(new FileOutputStream(fileName)); 
 			 pw.write("blob :" + getFileName(str) + " " + getHash(str));
-			 
-			 pw.close();
 		}
+		pw.write("tree");
+		pw.close();
 		
 	}
-	
+	//creating hashmap of everthing in index
 	public static HashMap creatingHash () throws FileNotFoundException {
 		HashMap <String,String> hashie = new HashMap (); 
 		ArrayList <String> listie = convertIndex(); 
@@ -86,6 +92,18 @@ public class TreeObject {
 			hashie.put(getFileName(str), getHash(str));
 		}
 		return hashie; 
+	}
+	// getting hash of everthing in index + parent tree
+	public static String gettingHash() throws FileNotFoundException {
+		HashMap <String,String >hashie = creatingHash();
+		String str = ""; 
+		for(String key : hashie.keySet()) {
+			str += key + hashie.get(key) ;
+		}
+		str += firstLine;
+		return getSha1Name(str);
+		
+		
 	}
 	
 	public static String getFileName(String str) {
