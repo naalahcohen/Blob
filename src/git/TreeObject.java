@@ -7,6 +7,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.Scanner;
 
 public class TreeObject {
 	
@@ -62,5 +63,50 @@ public class TreeObject {
 	    String result = formatter.toString();
 	    formatter.close();
 	    return result;
+	}
+	
+	public static void convertIndex() {
+		File index = new File("index");
+		try {
+		      FileWriter myWriter = new FileWriter("tree.txt");
+		      for(int i =0; i < countingNumberOfLines("index.txt"); i++) {
+		    	  myWriter.write("blob :" + 
+		      }
+		      myWriter.write("Files in Java might be tricky, but it is fun enough!");
+		      myWriter.close();
+		      System.out.println("Successfully wrote to the file.");
+		    } catch (IOException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		    }
+	}
+	
+	public static int countingNumberOfLines(String filename) {
+
+	    int count = 0;
+
+	    try {
+	      // create a new file object
+	      File file = new File(filename);
+
+	      // create an object of Scanner
+	      // associated with the file
+	      Scanner sc = new Scanner(file);
+
+	      // read each line and
+	      // count number of lines
+	      while(sc.hasNextLine()) {
+	        sc.nextLine();
+	        count++;
+	      }
+	      System.out.println("Total Number of Lines: " + count);
+
+	      // close scanner
+	      sc.close();
+	    } catch (Exception e) {
+	      e.getStackTrace();
+	    }
+		return count;
+	    
 	}
 }
