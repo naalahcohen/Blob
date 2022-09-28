@@ -1,12 +1,15 @@
 package git;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class TreeObject {
@@ -65,20 +68,57 @@ public class TreeObject {
 	    return result;
 	}
 	
-	public static void convertIndex() {
-		File index = new File("index");
-		try {
-		      FileWriter myWriter = new FileWriter("tree.txt");
-		      for(int i =0; i < countingNumberOfLines("index.txt"); i++) {
-		    	  myWriter.write("blob :" + 
-		      }
-		      myWriter.write("Files in Java might be tricky, but it is fun enough!");
-		      myWriter.close();
-		      System.out.println("Successfully wrote to the file.");
-		    } catch (IOException e) {
-		      System.out.println("An error occurred.");
-		      e.printStackTrace();
-		    }
+	public static File creatingTree () throws FileNotFoundException {
+		ArrayList <String> listie = convertIndex(); 
+		for(String str: listie) {
+			 PrintWriter pw = new PrintWriter(new FileOutputStream(fileName)); 
+			 pw.write("blob :" + getFileName(str) + " " + getHash(str));
+			 
+			 pw.close();
+		}
+		
+	}
+	
+	public static HashMap creatingHash () throws FileNotFoundException {
+		HashMap <String,String> hashie = new HashMap (); 
+		ArrayList <String> listie = convertIndex(); 
+		for(String str: listie) {
+			hashie.put(getFileName(str), getHash(str));
+		}
+		return hashie; 
+	}
+	
+	public static String getFileName(String str) {
+		String hash = str.substring(str.length()-40);
+		return hash; 
+	}
+	
+	public static String getHash(String str) {
+		String fileName = str.substring(0,str.length()-42);
+		return fileName; 
+	}
+
+	public static ArrayList convertIndex() throws FileNotFoundException {
+		Scanner s = new Scanner(new File("index.txt"));
+		ArrayList<String> list = new ArrayList<String>();
+		while (s.hasNext()){
+		    list.add(s.next());
+		}
+		s.close();
+		return list; 
+//		File index = new File("index");
+//		try {
+//		      FileWriter myWriter = new FileWriter("tree.txt");
+//		      for(int i =0; i < countingNumberOfLines("index.txt"); i++) {
+//		    	  myWriter.write("blob :" + 
+//		      }
+//		      myWriter.write("Files in Java might be tricky, but it is fun enough!");
+//		      myWriter.close();y7h
+//		      System.out.println("Successfully wrote to the file.");
+//		    } catch (IOException e) {
+//		      System.out.println("An error occurred.");
+//		      e.printStackTrace();
+//		    }
 	}
 	
 	public static int countingNumberOfLines(String filename) {
