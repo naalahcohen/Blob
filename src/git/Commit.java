@@ -31,6 +31,8 @@ public class Commit {
 	private String str;
 	private TreeObject todiefor;
 	private byte[] SHA1;
+	private String contents = "";
+	private String prevT;
 	
 	
 	public Commit(String summary1, String author1, String parent1) throws IOException, NoSuchAlgorithmException
@@ -41,16 +43,12 @@ public class Commit {
 		parent = parent1;
 		next = "";
 		
-		if(!(parent.equals("null"))) {
-			updateParent(parent); 
-		}
-		
-		else {
-			parent = null;
-		}
 		String parent3 = returnFirstLine (); 
 		TreeObject tobj = new TreeObject (arr(),parent3); 
-		todiefor = tobj;
+		File f = new File ("index");
+		PrintWriter writer = new PrintWriter(f);
+		writer.print("");
+		writer.close();
 	}
 	//creates arrayList of index 
 	public ArrayList <String> arr() throws NoSuchAlgorithmException, IOException{
@@ -65,23 +63,23 @@ public class Commit {
 	}
 	
 	public String returnFirstLine () throws FileNotFoundException, NoSuchAlgorithmException, IOException {
-		String firstLine;
-		String fileName = "";
-		try {
-			fileName = makeFile();
-		} catch (NoSuchAlgorithmException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		BufferedReader br = new BufferedReader(new FileReader("objects/"+fileName));
-        firstLine = br.readLine();
-		return firstLine;
+			if (parent!=null) {
+			BufferedReader brTest = new BufferedReader(new FileReader("objects/"+parent));
+		    return brTest.readLine();
+			}
+			return "null";
 	}
 	
-	public String getContents()
+	public  String sha1() throws FileNotFoundException, NoSuchAlgorithmException, IOException {
+		contents = getContents(); 
+		return generateSHA1(contents);
+	}
+	
+	
+	public String getContents() throws FileNotFoundException, NoSuchAlgorithmException, IOException
 	{
 		String contents = "";
-		contents += todiefor.returnName();
+		contents += returnFirstLine(); 
 		contents += "\n" + parent;
 		contents += "\n" + next;
 		contents += "\n" + author;
@@ -156,7 +154,9 @@ public class Commit {
 	
 	public void updateParent(String parent) throws NoSuchAlgorithmException, IOException
 	{
-		setVariable(3,generateSHA1(getContents()),parent);
+		String str5 ="objects/" + parent;
+		System.out.println( "updateParent" + str5);
+		setVariable(3,generateSHA1(getContents()),str5);
 	}
 	
 		public static void setVariable(int lineNumber, String data, String fileName) throws IOException {
