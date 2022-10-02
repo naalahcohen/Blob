@@ -44,6 +44,18 @@ public class TreeObject {
         myWriter.close();
 	}
 	
+	public String getContents() {
+		StringBuilder sb = new StringBuilder();
+		arr.forEach((word) -> sb.append(word));
+		String fileSha1Name = getSha1Name(sb.toString());
+		return fileSha1Name;
+	}
+	
+	
+	public String sha1 () {
+		return getSha1Name(getContents());
+	}
+	
 	private static String getSha1Name(String password)
 	{
 	    String sha1 = "";

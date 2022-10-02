@@ -45,6 +45,8 @@ public class Commit {
 		
 		String parent3 = returnFirstLine (); 
 		TreeObject tobj = new TreeObject (arr(),parent3); 
+		prevT = tobj.sha1();
+		makeFile();
 		File f = new File ("index");
 		PrintWriter writer = new PrintWriter(f);
 		writer.print("");
@@ -64,8 +66,10 @@ public class Commit {
 	
 	public String returnFirstLine () throws FileNotFoundException, NoSuchAlgorithmException, IOException {
 			if (parent!=null) {
-			BufferedReader brTest = new BufferedReader(new FileReader("objects/"+parent));
-		    return brTest.readLine();
+				BufferedReader br = new BufferedReader(new FileReader("objects/"+parent));
+				br.readLine();
+				br.readLine();
+				return br.readLine();
 			}
 			return "null";
 	}
@@ -80,8 +84,8 @@ public class Commit {
 	{
 		String contents = "";
 		contents += returnFirstLine(); 
-		contents += "\n" + parent;
-		contents += "\n" + next;
+		contents += "\n"+ parent;
+		contents += "\n" + prevT;
 		contents += "\n" + author;
 		contents += "\n" + getDate();
 		contents += "\n" + summary;
@@ -147,7 +151,7 @@ public class Commit {
 	            // TODO Auto-generated catch block
 	            e.printStackTrace();
 	        }
-	        System.out.println("make file" + fileName);
+	        System.out.println("make file " + fileName);
 	        return fileName;
 	 
 	}
