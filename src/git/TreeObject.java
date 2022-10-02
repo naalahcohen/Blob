@@ -16,17 +16,20 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class TreeObject {
-	String firstLine;
+	ArrayList<String> arr;
+	String str1 = ""; 
+	String name = "";
 	
-	public TreeObject(ArrayList<String> arrList, Commit parent) throws IOException, NoSuchAlgorithmException {
-		StringBuilder sb= new StringBuilder();
+	public TreeObject(ArrayList<String> arrList, String parent) throws IOException, NoSuchAlgorithmException {
+		StringBuilder sb = new StringBuilder();
 		arrList.forEach((word) -> sb.append(word));
-		String fileSha1Name= getSha1Name(sb.toString());
-		
-		File sha1File = new File("./objects/"+fileSha1Name);
+		String fileSha1Name = getSha1Name(sb.toString());
+		name = fileSha1Name;
+		File sha1File = new File("objects/"+ fileSha1Name);
         sha1File.createNewFile();
         
-        FileWriter myWriter = new FileWriter("./objects/"+fileSha1Name);
+        FileWriter myWriter = new FileWriter("objects/"+ fileSha1Name);
+        System.out.println("file sha name #1" + fileSha1Name); 
         arrList.forEach((word) -> {
 			try {
 				myWriter.write(word);
@@ -35,10 +38,10 @@ public class TreeObject {
 				e.printStackTrace();
 			}
 		});
+        arr = arrList;
+        str1 = parent;
+        creatingTree (); 
         myWriter.close();
-        BufferedReader br = new BufferedReader(new FileReader(parent.makeFile()));
-        firstLine = br.readLine();
-
 	}
 	
 	private static String getSha1Name(String password)
@@ -73,45 +76,42 @@ public class TreeObject {
 	    formatter.close();
 	    return result;
 	}
-	
-	public static File creatingTree () throws FileNotFoundException {
-		ArrayList <String> listie = convertIndex(); 
+	// creatingTree based off of arrayList that is full of the index
+	public PrintWriter creatingTree () throws IOException, NoSuchAlgorithmException {
 		PrintWriter pw = new PrintWriter(new FileOutputStream(gettingHash())); 
-		for(String str: listie) {
-			 pw.write("blob :" + getFileName(str) + " " + getHash(str));
+		for(String str: arr) {
+			 pw.write("blob : " + getFileName(str) + getHash(str) + "\n");
 		}
-		pw.write("tree");
+		pw.write("tree : " + str1);
 		pw.close();
+		return pw;
 		
 	}
 	//creating hashmap of everthing in index
-	public static HashMap creatingHash () throws FileNotFoundException {
+	public HashMap creatingHash () throws FileNotFoundException {
 		HashMap <String,String> hashie = new HashMap (); 
-		ArrayList <String> listie = convertIndex(); 
-		for(String str: listie) {
+		for(String str: arr) {
 			hashie.put(getFileName(str), getHash(str));
 		}
 		return hashie; 
 	}
 	// getting hash of everthing in index + parent tree
-	public static String gettingHash() throws FileNotFoundException {
-		HashMap <String,String >hashie = creatingHash();
+	public String gettingHash() throws IOException, NoSuchAlgorithmException {
+		HashMap <String,String> hashie = creatingHash();
 		String str = ""; 
 		for(String key : hashie.keySet()) {
 			str += key + hashie.get(key) ;
 		}
-		str += firstLine;
+		str += str1;
 		return getSha1Name(str);
-		
-		
 	}
-	
-	public static String getFileName(String str) {
+	//gets Hash of file
+	public static String getHash(String str) {
 		String hash = str.substring(str.length()-40);
 		return hash; 
 	}
-	
-	public static String getHash(String str) {
+	// gets fileName
+	public static String getFileName(String str) {
 		String fileName = str.substring(0,str.length()-42);
 		return fileName; 
 	}
@@ -166,5 +166,8 @@ public class TreeObject {
 	    }
 		return count;
 	    
+	}
+	public String returnName() {
+		return name; 
 	}
 }

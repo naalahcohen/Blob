@@ -1,6 +1,9 @@
 package git;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -15,6 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Formatter;
+import java.util.Scanner;
+import git.TreeObject;
 
 public class Commit {
 	private String parent;
@@ -24,27 +29,59 @@ public class Commit {
 	private String summary;
 	private String date;
 	private String str;
+	private TreeObject todiefor;
 	private byte[] SHA1;
 	
 	
-	public Commit(String fileName, String summary1, String author1, String parent1) throws IOException, NoSuchAlgorithmException
+	public Commit(String summary1, String author1, String parent1) throws IOException, NoSuchAlgorithmException
 	{
-		pTree = fileName;
+		
 		summary = summary1;
 		author = author1;
 		parent = parent1;
 		next = "";
-		if (!parent.equals(""))
-		{
-			updateParent("objects/" + parent);
+		
+		if(!(parent.equals("null"))) {
+			updateParent(parent); 
 		}
 		
+		else {
+			parent = null;
+		}
+		String parent3 = returnFirstLine (); 
+		TreeObject tobj = new TreeObject (arr(),parent3); 
+		todiefor = tobj;
+	}
+	//creates arrayList of index 
+	public ArrayList <String> arr() throws NoSuchAlgorithmException, IOException{
+		BufferedReader s = new BufferedReader(new FileReader("index"));
+		ArrayList<String> list = new ArrayList<String>();
+		while (s.ready()){
+		    list.add(s.readLine());
+		}
+//		list.add(returnFirstLine());
+		s.close();
+		return list; 
+	}
+	
+	public String returnFirstLine () throws FileNotFoundException, NoSuchAlgorithmException, IOException {
+		String firstLine;
+		String fileName = "";
+		try {
+			fileName = makeFile();
+		} catch (NoSuchAlgorithmException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		BufferedReader br = new BufferedReader(new FileReader("objects/"+fileName));
+        firstLine = br.readLine();
+		return firstLine;
 	}
 	
 	public String getContents()
 	{
 		String contents = "";
-		contents += pTree;
+		contents += todiefor.returnName();
 		contents += "\n" + parent;
 		contents += "\n" + next;
 		contents += "\n" + author;
@@ -112,7 +149,9 @@ public class Commit {
 	            // TODO Auto-generated catch block
 	            e.printStackTrace();
 	        }
+	        System.out.println("make file" + fileName);
 	        return fileName;
+	 
 	}
 	
 	public void updateParent(String parent) throws NoSuchAlgorithmException, IOException
@@ -123,7 +162,7 @@ public class Commit {
 		public static void setVariable(int lineNumber, String data, String fileName) throws IOException {
 			    Path path = Paths.get(fileName);
 			    ArrayList<String> lines = (ArrayList<String>) Files.readAllLines(path, StandardCharsets.UTF_8);
-			    lines.set(lineNumber - 1, data);
+			    lines.set(lineNumber -2, data);
 			    Files.write(path, lines, StandardCharsets.UTF_8);
 			}
 		
