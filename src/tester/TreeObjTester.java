@@ -34,6 +34,7 @@ public class TreeObjTester {
 		Blob b2 = new Blob ("test2.txt"); 
 		indxie.add("test2.txt");
 		Commit com2 = new Commit ("i am so cool", "Lauren LaPorta",com.sha1());
+		System.out.println("sha1" + com.sha1());
 //		com2.makeFile();
 //		ArrayList<String> treeContent = com.arr();
 //		TreeObject t2 = new TreeObject(treeContents, "ac9587d6b4edbd5bede560358a397ccb7f90839d");
@@ -47,6 +48,7 @@ public class TreeObjTester {
 		indxie.add("test3.txt");
 		String s = com2.sha1();
 		Commit com3 = new Commit ("hey besties", "Lauren LaPorta", com2.sha1());
+		System.out.println("sha2" + com2.sha1());
 //		com3.makeFile();
 //		ArrayList<String> treeConten = com.arr();
 //		TreeObject t3 = new TreeObject(treeContents, "3b46e499e180621ea52520459ebf03c84eb43230");
