@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -44,10 +45,10 @@ public class Commit {
 		next = "";
 		
 		String parent3 = returnFirstLine (); 
-		TreeObject tobj = new TreeObject (arr(),parent3); 
-		prevT = tobj.sha1();
+		TreeObject tobj = new TreeObject (arr(), parent1); 
+		prevT = tobj.gettingHash();
 		makeFile();
-		File f = new File ("index");
+		FileWriter f = new FileWriter ("index");
 		PrintWriter writer = new PrintWriter(f);
 		writer.print("");
 		writer.close();
@@ -59,7 +60,6 @@ public class Commit {
 		while (s.ready()){
 		    list.add(s.readLine());
 		}
-//		list.add(returnFirstLine());
 		s.close();
 		return list; 
 	}
@@ -83,13 +83,35 @@ public class Commit {
 	public String getContents() throws FileNotFoundException, NoSuchAlgorithmException, IOException
 	{
 		String contents = "";
-		contents += returnFirstLine(); 
-		contents += "\n"+ parent;
-		contents += "\n" + prevT;
+//		contents += returnFirstLine();
 		contents += "\n" + author;
 		contents += "\n" + getDate();
 		contents += "\n" + summary;
 		return contents;
+	}
+	
+	public String cont () throws IOException, NoSuchAlgorithmException {
+		String contents = "";
+	//	contents += returnFirstLine();
+		contents += prevT; 
+		contents += "\n"+ parent;
+	//	contents += "\n" + prevT;
+		contents += "\nnull";
+		if (parent!=null) {
+		FileReader f = new FileReader ("objects/" +parent);
+		BufferedReader br = new BufferedReader (f);
+		String pt1 = br.readLine() + "\n" + br.readLine();
+		br.readLine();
+		String pt2 = br.readLine() + "\n" + br.readLine() +  "\n" + br.readLine() + "\n";
+		PrintWriter rew = new PrintWriter ("objects/" +parent);
+		rew.write (pt1 + "\n" + sha1() + "\n" + pt2);
+		rew.close();
+		}
+		contents += "\n" + author;
+		contents += "\n" + getDate();
+		contents += "\n" + summary;
+		return contents;
+	
 	}
 	
 	private static String generateSHA1(String password)
@@ -124,17 +146,7 @@ public class Commit {
 	    formatter.close();
 	    return result;
 	}
-//	public String generateSHA1(String str) throws IOException, NoSuchAlgorithmException
-//	{
-//		String SHA1Str = "";
-//		 MessageDigest sha1 = MessageDigest.getInstance("SHA1");
-//		    SHA1 = sha1.digest((str).getBytes()); 
-//		    for(byte b : SHA1 ) {
-//		    	  SHA1Str += String.format("%02x",b);
-//		    	}
-//		    return SHA1Str;
-//	}
-//	
+
 	public String getDate()
 	{
 		String timeStamp = new SimpleDateFormat("MM/dd/yy").format(Calendar.getInstance().getTime());
@@ -144,9 +156,11 @@ public class Commit {
 	public String makeFile() throws NoSuchAlgorithmException, IOException
 	{
 		String fileName = generateSHA1(getContents());
+		PrintWriter head = new PrintWriter("head");
+		head.print(fileName);
 		 Path p = Paths.get("objects/"+ fileName);
 	        try {
-	            Files.writeString(p, getContents(), StandardCharsets.ISO_8859_1);
+	            Files.writeString(p, cont(), StandardCharsets.ISO_8859_1);
 	        } catch (IOException e) {
 	            // TODO Auto-generated catch block
 	            e.printStackTrace();
@@ -175,6 +189,18 @@ public class Commit {
 		
 	}
 	}
+
+//public String generateSHA1(String str) throws IOException, NoSuchAlgorithmException
+//{
+//	String SHA1Str = "";
+//	 MessageDigest sha1 = MessageDigest.getInstance("SHA1");
+//	    SHA1 = sha1.digest((str).getBytes()); 
+//	    for(byte b : SHA1 ) {
+//	    	  SHA1Str += String.format("%02x",b);
+//	    	}
+//	    return SHA1Str;
+//}
+//
 //			FileInputStream fstream = new FileInputStream(parent);
 //			BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 //

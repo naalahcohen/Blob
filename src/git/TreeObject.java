@@ -19,29 +19,32 @@ public class TreeObject {
 	ArrayList<String> arr;
 	String str1 = ""; 
 	String name = "";
+	String removefile = ""; 
+	ArrayList<String> newArr;
 	
 	public TreeObject(ArrayList<String> arrList, String parent) throws IOException, NoSuchAlgorithmException {
-		StringBuilder sb = new StringBuilder();
-		arrList.forEach((word) -> sb.append(word));
-		String fileSha1Name = getSha1Name(sb.toString());
-		name = fileSha1Name;
-		File sha1File = new File("objects/"+ fileSha1Name);
-        sha1File.createNewFile();
-        
-        FileWriter myWriter = new FileWriter("objects/"+ fileSha1Name);
-        System.out.println("file sha name #1" + fileSha1Name); 
-        arrList.forEach((word) -> {
-			try {
-				myWriter.write(word);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
+//		StringBuilder sb = new StringBuilder();
+//		arrList.forEach((word) -> sb.append(word));
+//		String fileSha1Name = getSha1Name(sb.toString());
+//		name = fileSha1Name;
+//		File sha1File = new File("objects/"+ fileSha1Name);
+//        sha1File.createNewFile();
+//        
+//        FileWriter myWriter = new FileWriter("objects/"+ fileSha1Name);
+//        System.out.println("file sha name #1" + fileSha1Name); 
+//        arrList.forEach((word) -> {
+//			try {
+//				myWriter.write(word);
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		});
         arr = arrList;
         str1 = parent;
         creatingTree (); 
-        myWriter.close();
+        
+//        myWriter.close();
 	}
 	
 	public String getContents() {
@@ -53,6 +56,7 @@ public class TreeObject {
 	
 	
 	public String sha1 () {
+		System.out.println("\n" + "actual sha" + getSha1Name(getContents()));
 		return getSha1Name(getContents());
 	}
 	
@@ -91,14 +95,51 @@ public class TreeObject {
 	// creatingTree based off of arrayList that is full of the index
 	public PrintWriter creatingTree () throws IOException, NoSuchAlgorithmException {
 		PrintWriter pw = new PrintWriter(new FileOutputStream(gettingHash())); 
-		for(String str: arr) {
-			 pw.write("blob : " + getFileName(str) + getHash(str) + "\n");
+		String str2 = gettingHash(); 
+		System.out.println("\n" + "actual hash" + str2);
+		if(str1 != null) {
+			pw.write("tree : " + str1);
 		}
-		pw.write("tree : " + str1);
+		for(String str: arr) {
+			if(!(str.substring(0,9).equals("*deleted*"))) {
+			 pw.write("blob : " + getFileName(str) + getHash(str) + "\n");
+			}
+			else {
+				removefile = str.substring(8);
+				connectingToEverythingBut(); 
+			}
+		}
 		pw.close();
 		return pw;
 		
 	}
+	
+	public void edit() throws IOException, NoSuchAlgorithmException {
+		connectingToEverythingBut();
+		Blob b = new Blob (removefile);
+	}
+	
+	public void connectingToEverythingBut() throws IOException {
+		connect(str1, removefile); 
+	}
+	
+	public void connect(String tree, String fileName) throws IOException {
+		BufferedReader s = new BufferedReader(new FileReader(tree));
+		String br = s.readLine(); 
+		while(s.ready()) {
+			String line = s.readLine(); 
+			if(line.substring(49).equals(fileName)) {
+				newArr.add(br);
+				break;
+			}
+			else {
+				newArr.add(line);
+			}
+		}
+		connect(br.substring(7),fileName);
+	}
+	
+	
 	//creating hashmap of everthing in index
 	public HashMap creatingHash () throws FileNotFoundException {
 		HashMap <String,String> hashie = new HashMap (); 
@@ -128,28 +169,28 @@ public class TreeObject {
 		return fileName; 
 	}
 
-	public static ArrayList convertIndex() throws FileNotFoundException {
-		Scanner s = new Scanner(new File("index.txt"));
-		ArrayList<String> list = new ArrayList<String>();
-		while (s.hasNext()){
-		    list.add(s.next());
-		}
-		s.close();
-		return list; 
-//		File index = new File("index");
-//		try {
-//		      FileWriter myWriter = new FileWriter("tree.txt");
-//		      for(int i =0; i < countingNumberOfLines("index.txt"); i++) {
-//		    	  myWriter.write("blob :" + 
-//		      }
-//		      myWriter.write("Files in Java might be tricky, but it is fun enough!");
-//		      myWriter.close();y7h
-//		      System.out.println("Successfully wrote to the file.");
-//		    } catch (IOException e) {
-//		      System.out.println("An error occurred.");
-//		      e.printStackTrace();
-//		    }
-	}
+//	public static ArrayList convertIndex() throws FileNotFoundException {
+//		Scanner s = new Scanner(new File("index.txt"));
+//		ArrayList<String> list = new ArrayList<String>();
+//		while (s.hasNext()){
+//		    list.add(s.next());
+//		}
+//		s.close();
+//		return list; 
+////		File index = new File("index");
+////		try {
+////		      FileWriter myWriter = new FileWriter("tree.txt");
+////		      for(int i =0; i < countingNumberOfLines("index.txt"); i++) {
+////		    	  myWriter.write("blob :" + 
+////		      }
+////		      myWriter.write("Files in Java might be tricky, but it is fun enough!");
+////		      myWriter.close();y7h
+////		      System.out.println("Successfully wrote to the file.");
+////		    } catch (IOException e) {
+////		      System.out.println("An error occurred.");
+////		      e.printStackTrace();
+////		    }
+//	}
 	
 	public static int countingNumberOfLines(String filename) {
 
