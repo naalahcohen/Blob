@@ -167,7 +167,9 @@ public class TreeObject {
 				}
 			}
 		}
+		if(doesHave(tree)) {
 		connect(treeFirst.substring(7),fileName);
+		}
 	}
 	
 	
