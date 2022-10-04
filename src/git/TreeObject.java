@@ -128,6 +128,18 @@ public class TreeObject {
 		Blob b = new Blob (removefile);
 	}
 	
+	public boolean doesHave (String tree) throws FileNotFoundException {
+		Scanner s = new Scanner (new File (tree));
+		String str3 = s.nextLine();
+		if(!(str3.contains("null"))) {
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	
 	public void connectingToEverythingBut() throws IOException {
 		connect(str1, removefile); 
 	}
