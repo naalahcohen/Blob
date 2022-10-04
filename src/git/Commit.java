@@ -49,6 +49,9 @@ public class Commit {
 		TreeObject tobj = new TreeObject (arr(), parentTree()); 
 		prevT = tobj.curfileName;
 		makeFile();
+		PrintWriter head = new PrintWriter("head");
+		head.print(generateSHA1(getContents()));
+		head.close();
 		FileWriter f = new FileWriter ("index");
 		PrintWriter writer = new PrintWriter(f);
 		writer.print("");
@@ -154,8 +157,6 @@ public class Commit {
 	public String makeFile() throws NoSuchAlgorithmException, IOException
 	{
 		String fileName = generateSHA1(getContents());
-		PrintWriter head = new PrintWriter("head");
-		head.print(fileName);
 		 Path p = Paths.get("objects/"+ fileName);
 	        try {
 	            Files.writeString(p, cont(), StandardCharsets.ISO_8859_1);
