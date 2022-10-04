@@ -17,6 +17,8 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Formatter;
@@ -150,8 +152,9 @@ public class Commit {
 
 	public String getDate()
 	{
-		String timeStamp = new SimpleDateFormat("MM/dd/yy").format(Calendar.getInstance().getTime());
-		return timeStamp;
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+		LocalDateTime now = LocalDateTime.now();  
+		return(dtf.format(now));
 	}
 	
 	public String makeFile() throws NoSuchAlgorithmException, IOException
