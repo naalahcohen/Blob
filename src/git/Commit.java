@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,8 +46,8 @@ public class Commit {
 		next = "";
 		
 		String parent3 = returnFirstLine (); 
-		TreeObject tobj = new TreeObject (arr(), parent1); 
-		prevT = tobj.gettingHash();
+		TreeObject tobj = new TreeObject (arr(), parentTree()); 
+		prevT = tobj.curfileName;
 		makeFile();
 		FileWriter f = new FileWriter ("index");
 		PrintWriter writer = new PrintWriter(f);
@@ -55,13 +56,31 @@ public class Commit {
 	}
 	//creates arrayList of index 
 	public ArrayList <String> arr() throws NoSuchAlgorithmException, IOException{
-		BufferedReader s = new BufferedReader(new FileReader("index"));
+		Scanner s = new Scanner(new File ("index"));
+		Path p = Paths.get("index");
+		String c = Files.readString(p);
 		ArrayList<String> list = new ArrayList<String>();
-		while (s.ready()){
-		    list.add(s.readLine());
+		while (s.hasNextLine()){
+			String ss = s.nextLine();
+		    list.add(ss);
 		}
 		s.close();
 		return list; 
+//		BufferedReader s = new BufferedReader(new FileReader("index"));
+//		ArrayList<String> list = new ArrayList<String>();
+//		while (s.ready()){
+//		    list.add(s.readLine());
+//		}
+//		s.close();
+//		return list; 
+	}
+	
+	public String parentTree () throws IOException {
+		if (parent!=null) {
+		BufferedReader br = new BufferedReader(new FileReader("objects/"+ parent));
+			return br.readLine();
+		}
+		return "null";
 	}
 	
 	public String returnFirstLine () throws FileNotFoundException, NoSuchAlgorithmException, IOException {
@@ -116,36 +135,22 @@ public class Commit {
 	
 	private static String generateSHA1(String password)
 	{
-	    String sha1 = "";
-	    try
-	    {
-	        MessageDigest crypt = MessageDigest.getInstance("SHA-1");
-	        crypt.reset();
-	        crypt.update(password.getBytes("UTF-8"));
-	        sha1 = byteToHex(crypt.digest());
-	    }
-	    catch(NoSuchAlgorithmException e)
-	    {
-	        e.printStackTrace();
-	    }
-	    catch(UnsupportedEncodingException e)
-	    {
-	        e.printStackTrace();
-	    }
-	    return sha1;
+		try {
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            byte[] messageDigest = md.digest(password.getBytes());
+            BigInteger no = new BigInteger(1, messageDigest);
+            String hashtext = no.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        }
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
 	}
 
-	private static String byteToHex(final byte[] hash)
-	{
-	    Formatter formatter = new Formatter();
-	    for (byte b : hash)
-	    {
-	        formatter.format("%02x", b);
-	    }
-	    String result = formatter.toString();
-	    formatter.close();
-	    return result;
-	}
+
 
 	public String getDate()
 	{
@@ -169,48 +174,32 @@ public class Commit {
 	        return fileName;
 	 
 	}
-	
-	public void updateParent(String parent) throws NoSuchAlgorithmException, IOException
-	{
-		String str5 ="objects/" + parent;
-		System.out.println( "updateParent" + str5);
-		setVariable(3,generateSHA1(getContents()),str5);
-	}
-	
-		public static void setVariable(int lineNumber, String data, String fileName) throws IOException {
-			    Path path = Paths.get(fileName);
-			    ArrayList<String> lines = (ArrayList<String>) Files.readAllLines(path, StandardCharsets.UTF_8);
-			    lines.set(lineNumber -2, data);
-			    Files.write(path, lines, StandardCharsets.UTF_8);
-			}
-		
-	public void convertIndex() {
-		
-		
-	}
-	}
+}
 
-//public String generateSHA1(String str) throws IOException, NoSuchAlgorithmException
+
+//private static String byteToHex(final byte[] hash)
 //{
-//	String SHA1Str = "";
-//	 MessageDigest sha1 = MessageDigest.getInstance("SHA1");
-//	    SHA1 = sha1.digest((str).getBytes()); 
-//	    for(byte b : SHA1 ) {
-//	    	  SHA1Str += String.format("%02x",b);
-//	    	}
-//	    return SHA1Str;
+//    Formatter formatter = new Formatter();
+//    for (byte b : hash)
+//    {
+//        formatter.format("%02x", b);
+//    }
+//    String result = formatter.toString();
+//    formatter.close();
+//    return result;
 //}
-//
-//			FileInputStream fstream = new FileInputStream(parent);
-//			BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-//
-//			String pContents = "";
-//			pContents += br.readLine();
-//			pContents += br.readLine();
-//			br.readLine();
-//			pContents += generateSHA1(getContents());
-//			pContents += br.readLine();
-//			pContents += br.readLine();
-//			pContents += br.readLine();
-//			System.out.println(pContents);
+	
+//	public void updateParent(String parent) throws NoSuchAlgorithmException, IOException
+//	{
+//		String str5 ="objects/" + parent;
+//		System.out.println( "updateParent" + str5);
+//		setVariable(3,generateSHA1(getContents()),str5);
+//	}
+//	
+//		public static void setVariable(int lineNumber, String data, String fileName) throws IOException {
+//			    Path path = Paths.get(fileName);
+//			    ArrayList<String> lines = (ArrayList<String>) Files.readAllLines(path, StandardCharsets.UTF_8);
+//			    lines.set(lineNumber -2, data);
+//			    Files.write(path, lines, StandardCharsets.UTF_8);
 //			}
+

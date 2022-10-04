@@ -37,7 +37,10 @@ public class TreeObjTester {
 	
 	
 		Commit com2 = new Commit ("i am so cool", "Lauren LaPorta",com.sha1());
-		System.out.println("sha1" + com.sha1());
+		
+		
+		
+		
 //		com2.makeFile();
 //		ArrayList<String> treeContent = com.arr();
 //		TreeObject t2 = new TreeObject(treeContents, "ac9587d6b4edbd5bede560358a397ccb7f90839d");
@@ -47,10 +50,14 @@ public class TreeObjTester {
 //		writer2.close();
 //		
 //		
-//		Blob b3 = new Blob ("test3.txt"); 
-//		indxie.add("test3.txt");
-//		String s = com2.sha1();
-//		Commit com3 = new Commit ("hey besties", "Lauren LaPorta", com2.sha1());
+		Blob b4 = new Blob ("test4.txt"); 
+		indxie.add("test4.txt");
+		String s = com2.sha1();
+		Commit com3 = new Commit ("crys", "Lauren LaPorta", com2.sha1());
+		
+		Blob b5 = new Blob ("test6.txt"); 
+		indxie.add("test6.txt");
+		Commit com4 = new Commit ("bye", "Lauren LaPorta", com3.sha1());
 //		System.out.println("sha2" + com2.sha1());
 //		com3.makeFile();
 //		ArrayList<String> treeConten = com.arr();

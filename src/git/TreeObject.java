@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -20,31 +21,22 @@ public class TreeObject {
 	String str1 = ""; 
 	String name = "";
 	String removefile = ""; 
+	String curfileName = ""; 
+	String shadname = ""; 
 	ArrayList<String> newArr;
 	
 	public TreeObject(ArrayList<String> arrList, String parent) throws IOException, NoSuchAlgorithmException {
-//		StringBuilder sb = new StringBuilder();
-//		arrList.forEach((word) -> sb.append(word));
-//		String fileSha1Name = getSha1Name(sb.toString());
-//		name = fileSha1Name;
-//		File sha1File = new File("objects/"+ fileSha1Name);
-//        sha1File.createNewFile();
-//        
-//        FileWriter myWriter = new FileWriter("objects/"+ fileSha1Name);
-//        System.out.println("file sha name #1" + fileSha1Name); 
-//        arrList.forEach((word) -> {
-//			try {
-//				myWriter.write(word);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		});
         arr = arrList;
         str1 = parent;
+        for(String str: arr) {
+        	shadname += str;
+        }
+        curfileName = sha1(shadname);
         creatingTree (); 
-        
-//        myWriter.close();
+	}
+	
+	public String getcurtreesha() {
+		return curfileName;
 	}
 	
 	public String getContents() {
@@ -55,9 +47,19 @@ public class TreeObject {
 	}
 	
 	
-	public String sha1 () {
-		System.out.println("\n" + "actual sha" + getSha1Name(getContents()));
-		return getSha1Name(getContents());
+	public String sha1 (String sha) {
+		String value = sha;
+		String sha1 = "";
+		try {
+			MessageDigest digest = MessageDigest.getInstance("SHA-1");
+	        digest.reset();
+	        digest.update(value.getBytes("utf8"));
+	        sha1 = String.format("%040x", new BigInteger(1, digest.digest()));
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return sha1;
 	}
 	
 	private static String getSha1Name(String password)
@@ -94,20 +96,16 @@ public class TreeObject {
 	}
 	// creatingTree based off of arrayList that is full of the index
 	public PrintWriter creatingTree () throws IOException, NoSuchAlgorithmException {
-		PrintWriter pw = new PrintWriter(new FileOutputStream(gettingHash())); 
-		String str2 = gettingHash(); 
-		System.out.println("\n" + "actual hash" + str2);
-		if(str1 != null) {
-			pw.write("tree : " + str1);
-		}
+		PrintWriter pw = new PrintWriter(new FileOutputStream(curfileName)); 
+		pw.append("tree : " + str1 + "\n");
 		for(String str: arr) {
-			if(!(str.substring(0,9).equals("*deleted*"))) {
-			 pw.write("blob : " + getFileName(str) + getHash(str) + "\n");
-			}
-			else {
-				removefile = str.substring(8);
-				connectingToEverythingBut(); 
-			}
+//			if(!(str.substring(0,9).equals("*deleted*"))) {
+			 pw.append("blob : " + getFileName(str) + getHash(str) + "\n");
+//			}
+//			else {
+//				removefile = str.substring(8);
+//				connectingToEverythingBut(); 
+//			}
 		}
 		pw.close();
 		return pw;
