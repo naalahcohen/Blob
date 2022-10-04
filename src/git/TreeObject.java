@@ -127,7 +127,7 @@ public class TreeObject {
 		connectingToEverythingBut();
 		Blob b = new Blob (removefile);
 	}
-	
+	// checks if tree has previous parent
 	public boolean doesHave (String tree) throws FileNotFoundException {
 		Scanner s = new Scanner (new File (tree));
 		String str3 = s.nextLine();
@@ -138,26 +138,36 @@ public class TreeObject {
 	}
 	
 	
-	
-	
 	public void connectingToEverythingBut() throws IOException {
 		connect(str1, removefile); 
 	}
 	
 	public void connect(String tree, String fileName) throws IOException {
-		BufferedReader s = new BufferedReader(new FileReader(tree));
-		String br = s.readLine(); 
-		while(s.ready()) {
-			String line = s.readLine(); 
-			if(line.substring(49).equals(fileName)) {
-				newArr.add(br);
-				break;
-			}
-			else {
-				newArr.add(line);
+		String treeFirst = ""; 
+		if(doesHave(tree)) {
+			BufferedReader s = new BufferedReader(new FileReader(tree));
+			treeFirst = s.readLine(); 
+			while(s.ready()) {
+				String line = s.readLine(); 
+				if(line.substring(48).equals(fileName)) {
+					newArr.add(treeFirst);
+				}
+				else {
+					newArr.add(line);
+				}
 			}
 		}
-		connect(br.substring(7),fileName);
+		else {
+			BufferedReader s = new BufferedReader(new FileReader(tree));
+			s.readLine(); //skip over the tree : null part
+			while(s.ready()) {
+				String cur = s.readLine();
+				if(!(cur.contains(fileName))) {
+					newArr.add(cur);
+				}
+			}
+		}
+		connect(treeFirst.substring(7),fileName);
 	}
 	
 	
