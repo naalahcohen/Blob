@@ -26,7 +26,8 @@ public class TreeObject {
 	ArrayList<String> newArr;
 	
 	public TreeObject(ArrayList<String> arrList, String parent) throws IOException, NoSuchAlgorithmException {
-        arr = arrList;
+        newArr = new ArrayList <String> (); 
+		arr = arrList;
         str1 = parent;
         for(String str: arr) {
         	shadname += str;
@@ -99,8 +100,18 @@ public class TreeObject {
 		PrintWriter pw = new PrintWriter(new FileOutputStream(curfileName)); 
 		pw.append("tree : " + str1 + "\n");
 		for(String str: arr) {
-//			if(!(str.substring(0,9).equals("*deleted*"))) {
+			if((str.substring(0,9).equals("*deleted*"))) {
+				connectingToEverythingBut();
+			}
+			else if((str.substring(0,8).equals("*edited*"))) {
+				edit();
+			}
+			else {
 			 pw.append("blob : " + getFileName(str) + getHash(str) + "\n");
+			}
+			for(String sturng: newArr) {
+				pw.append(sturng + "\n");
+			}
 //			}
 //			else {
 //				removefile = str.substring(8);

@@ -66,13 +66,6 @@ public class Commit {
 		}
 		s.close();
 		return list; 
-//		BufferedReader s = new BufferedReader(new FileReader("index"));
-//		ArrayList<String> list = new ArrayList<String>();
-//		while (s.ready()){
-//		    list.add(s.readLine());
-//		}
-//		s.close();
-//		return list; 
 	}
 	
 	public String parentTree () throws IOException {
