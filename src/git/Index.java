@@ -85,6 +85,12 @@ public class Index {
 		f.append("*deleted*" + fileName);
 		f.close();
 	}
+	
+	public void edit(String fileName) throws FileNotFoundException {
+		PrintWriter f = new PrintWriter("index");
+		f.append("*edited*" + fileName);
+		f.close();
+	}
 
 	
 	}
