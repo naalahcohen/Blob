@@ -1,7 +1,9 @@
 package tester;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
@@ -40,6 +42,7 @@ class JUnitTest {
 
 		Blob b3 = new Blob ("test3.txt"); 
 		indxie.add("test3.txt");
+		indxie.delete("test2.txt");
 	
 	
 		Commit com2 = new Commit ("i am so cool", "Lauren LaPorta",com.sha1());
@@ -47,13 +50,48 @@ class JUnitTest {
 
 		Blob b4 = new Blob ("test4.txt"); 
 		indxie.add("test4.txt");
+		indxie.delete("test1.txt");
 		String s = com2.sha1();
 		Commit com3 = new Commit ("crys", "Lauren LaPorta", com2.sha1());
 		
 		Blob b5 = new Blob ("test6.txt"); 
 		indxie.add("test6.txt");
 		Commit com4 = new Commit ("bye", "Lauren LaPorta", com3.sha1());
+	}
+	
+	@Test
+	void testHeadCommits() throws NoSuchAlgorithmException, IOException {
+		Index indxie = new Index ();
+		indxie.init(); 
+		Blob b = new Blob ("test1.txt"); 
+		indxie.add("test1.txt");
+		Blob b2 = new Blob ("test2.txt"); 
+		indxie.add("test2.txt");
+		Commit com = new Commit ("i hate myself and my life", "Lauren LaPorta",null);
+
+		Blob b3 = new Blob ("test3.txt"); 
+		indxie.add("test3.txt");
 		
+		BufferedReader br = new BufferedReader (new FileReader("head"));
+		String headsha = br.readLine();
+	
+	
+		Commit com2 = new Commit ("i am so cool", "Lauren LaPorta",headsha);
+		
+		BufferedReader br1 = new BufferedReader (new FileReader("head"));
+		String headsha1 = br.readLine();
+
+		Blob b4 = new Blob ("test4.txt"); 
+		indxie.add("test4.txt");
+		String s = com2.sha1();
+		Commit com3 = new Commit ("crys", "Lauren LaPorta", headsha1);
+		
+		BufferedReader br2 = new BufferedReader (new FileReader("head"));
+		String headsha2 = br.readLine();
+		
+		Blob b5 = new Blob ("test6.txt"); 
+		indxie.add("test6.txt");
+		Commit com4 = new Commit ("bye", "Lauren LaPorta", headsha2);
 	}
  
 }
